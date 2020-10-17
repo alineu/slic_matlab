@@ -6,7 +6,6 @@ function [A, P] = calcPanelYoonSternAsymPert(asymParams, asymBem, dielSurfData, 
 alpha = asymParams.alpha;
 beta  = asymParams.beta;
 EfieldOffset = asymParams.EfieldOffset;
-%deltaOffset  = -alpha * tanh(beta*0-EfieldOffset);
 deltaOffset = asymParams.mu;
 I = eye(length(dielSurfData.areas));
 

@@ -1,8 +1,10 @@
-function [calculatedE, referenceE,electrostatic,nonpolar,...
-          hb,disp,disp_sl_sl,disp_sv_sl,disp_sv_sv,cav,comb] = CalculateEnergiesFromBEMCosmo(Params)
+function [calculatedE, referenceE, electrostatic, nonpolar,...
+          hb, disp, disp_sl_sl, disp_sv_sl, disp_sv_sv, cav, comb] = ...
+          CalculateEnergiesFromBEMCosmo(Params)
+
 global UsefulConstants ProblemSet saveMemory writeLogfile logfileName
 
-% define empty vectors so we can extend them easily
+% Define empty vectors so we can extend them easily
 calculatedE  = [];
 referenceE = [];
 electrostatic  =[];
@@ -15,17 +17,17 @@ disp_sv_sv= [];
 cav = [];
 comb = [];
 
-% how many problem geometries do we have ?  note that this can be
+% How many problem geometries do we have? Note that this can be
 % DIFFERENT FROM the number of overall "BEM calculations" we do.
 
 numProblems = length(ProblemSet);
 
 for i=1:numProblems
-    i
+  fprintf('Problem %d added!/n',i)  
   curProblem = ProblemSet(i);
-  [newCalculatedE, newReferenceE,newElectrostatic,newNonpolar,newHb,newDisp,...
-      newDisp_sl_sl,newDisp_sv_sl,newDisp_sv_sv,newCav,newComb] = ...
-      calculateProblemCosmo(curProblem, Params);
+  [newCalculatedE, newReferenceE, newElectrostatic, newNonpolar, ...
+   newHb, newDisp, newDisp_sl_sl, newDisp_sv_sl, newDisp_sv_sv, ...
+   newCav, newComb] = calculateProblemCosmo(curProblem, Params);
 
 if saveMemory
   ProblemSet(i).bemPcm = [];
@@ -36,12 +38,12 @@ end
 
 if writeLogfile
   fid = fopen(logfileName,'a');
-  fprintf(fid,'%s,%f,%f,%f,%f\n',curProblem.name,newReferenceE(1), ...
+  fprintf(fid,'%s,%f,%f,%f,%f\n',curProblem.name, newReferenceE(1), ...
 	  newCalculatedE(1),newElectrostatic(1),newNonpolar(1));
   fclose(fid);
 end
 
-  % append calculated and reference results to total list  
+  % Append calculated and reference results to total list  
   calculatedE = [calculatedE; newCalculatedE];
   referenceE = [referenceE; newReferenceE];
   electrostatic= [electrostatic; newElectrostatic];
@@ -56,5 +58,5 @@ end
   
 end
 
-% there's no need for a trailing "end" at the end of a Matlab
+% There's no need for a trailing "end" at the end of a Matlab
 % function, when it's in a .m file by itself!

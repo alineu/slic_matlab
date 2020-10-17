@@ -1,5 +1,5 @@
 function pqr = loadPqr(filename)
-fh = fopen(filename,'r');
+fh = fopen(filename, 'r');
 C = textscan(fh, '%s%d%s%s%d%f%f%f%f%f');
 
 if length(C{5})>0
@@ -22,7 +22,7 @@ else
   atomnum = C{2};
 end
 fclose(fh);
-pqr = struct('xyz', xyz, 'q', q, 'r', r, 'resnum',resnum,'resid',0, ...
-	     'atomid', 0, 'atomnum',atomnum);
+pqr = struct('xyz', xyz, 'q', q, 'r', r, 'resnum', resnum, 'resid', 0, ...
+	     'atomid', 0, 'atomnum', atomnum);
 pqr.resid = resid;
 pqr.atomid = atomid;

@@ -12,7 +12,7 @@ nonpolar = [];
 numProblems = length(ProblemSet);
 
 for i=1:numProblems
-    i
+  fprintf('Problem %d added!/n',i)
   curProblem = ProblemSet(i);
   [newCalculatedE, newReferenceE,newElectrostatic,newNonpolar]  = calculateProblemSA(curProblem, Params);
 
@@ -37,5 +37,5 @@ end
   nonpolar = [nonpolar; newNonpolar];
 end
 
-% there's no need for a trailing "end" at the end of a Matlab
+% There's no need for a trailing "end" at the end of a Matlab
 % function, when it's in a .m file by itself!

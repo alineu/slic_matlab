@@ -18,8 +18,8 @@ loadConstants
 convertKJtoKcal = 1/joulesPerCalorie;
 global UsefulConstants ProblemSet saveMemory writeLogfile logfileName
 saveMemory = 0;
-writeLogfile = 0;
-logfileName = 'param_logfile';
+writeLogfile = 1;
+logfileName = 'param_logfile_1';
 
 % allData includes atom parameters for 495 neutral small molecules that are REQUIRED
 % for parameterization and prediction runs. This includes dispersion-atom-types, 
@@ -135,15 +135,98 @@ end
 
 % optimization
 
-% initial guesses
-x0  =  [0.453 -48.813	-0.541 -0.548	-0.062	... %slic es
+x0_1 = [0.227 -31.964 0.315 0.501 0.047 ... %slic es
+        0.480 0.899 0.262 0.002 0.360 0.841 ... %disp
+        0.466 1.000 0.788 0.990 0.601 0.178 ... %disp cont.
+        0.562 0.008 0.853 0.840 0.429 0.408 ... %disp cont.
+        0.906 0.369 0.529 0.575 0.568 0.229 ... %hbond
+        0.397 0.407 0.780 0.446 0.671 0.614 ... %hbond 
+        2 ... % combinatorial z
+        1]; % cavity   
+x0_2 = [0.461 -17.318 0.837 0.538 0.539 ... %slic es
+        0.669 0.422 0.453 0.056 0.978 0.469 ... %disp
+        0.517 0.539 0.310 0.721 0.486 0.430 ... %disp cont.
+        0.788 0.380 0.552 0.653 0.889 0.895 ... %disp cont.
+        0.626 0.454 0.000 0.481 0.870 0.277 ... %hbond
+        0.436 0.608 0.933 0.160 0.559 0.627 ... %hbond 
+        3 ... % combinatorial z
+        1.2]; % cavity   
+x0_3 = [0.582 -48.195 0.489 0.514 0.523 ... %slic es
+        0.054 0.010 0.478 0.539 0.461 0.732 ... %disp
+        0.415 0.185 0.695 0.824 0.562 0.824 ... %disp cont.
+        0.081 0.566 0.399 0.989 0.197 0.674 ... %disp cont.
+        0.173 0.027 0.224 0.438 0.926 0.031 ... %hbond
+        0.820 0.715 0.254 0.161 0.585 0.204 ... %hbond 
+        1.5 ... % combinatorial z
+        0.25]; % cavity   
+x0_4 = [0.154 -45.677 0.117 0.135 0.425 ... %slic es
+        0.772 0.119 0.626 0.108 0.425 0.008 ... %disp
+        0.495 0.826 0.122 0.835 0.884 0.271 ... %disp cont.
+        0.624 0.432 0.230 0.357 0.520 0.049 ... %disp cont.
+        0.765 0.636 0.714 0.459 0.777 0.828 ... %hbond
+        0.930 0.928 0.885 0.637 0.748 0.879 ... %hbond 
+        2 ... % combinatorial z
+        1]; % cavity   
+x0_5 = [0.444 -40.067 0.094 0.563 0.649 ... %slic es
+        0.557 0.799 0.707 0.866 0.981 0.053 ... %disp
+        0.854 0.858 0.718 0.585 0.809 0.413 ... %disp cont.
+        0.454 0.763 0.948 0.789 0.753 0.575 ... %disp cont.
+        0.875 0.951 0.498 0.921 0.888 0.522 ... %hbond
+        0.451 0.186 0.350 0.853 0.611 0.339 ... %hbond 
+        3 ... % combinatorial z
+        0.5]; % cavity   
+x0_6 = [0.361 -95.930 0.933 0.378 0.567 ... %slic es
+        0.733 0.981 0.214 0.495 0.377 0.020 ... %disp
+        0.754 0.921 0.737 0.448 0.571 0.810 ... %disp cont.
+        0.792 0.529 0.418 0.337 0.683 0.499 ... %disp cont.
+        0.586 0.326 0.442 0.826 0.036 0.042 ... %hbond
+        0.496 0.779 0.868 0.658 0.186 0.653 ... %hbond 
+        1 ... % combinatorial z
+        0.25]; % cavity   
+x0_7 = [0.771 -71.754 0.612 0.621 0.582 ... %slic es
+        0.733 0.981 0.214 0.495 0.377 0.020 ... %disp
+        0.754 0.921 0.737 0.448 0.571 0.810 ... %disp cont.
+        0.792 0.529 0.418 0.337 0.683 0.499 ... %disp cont.
+        0.586 0.326 0.442 0.826 0.036 0.042 ... %hbond
+        0.496 0.779 0.868 0.658 0.186 0.653 ... %hbond 
+        2 ... % combinatorial z
+        1]; % cavity   
+x0_8 = [0.102 -36.661 0.310 0.022 0.203 ... %slic es
+        1.216 1.138 1.140 1.438 0.842 0.164 ... %disp
+        0.000 1.090 0.860 0.641 1.095 0.160 ... %disp cont.
+        0.327 0.886 0.442 0.828 1.153 0.358 ... %disp cont.
+        0.796 0.210 0.489 0.145 0.121 0.088 ... %hbond
+        0.444 0.465 0.109 0.978 2.708 0.088 ... %hbond 
+        3 ... % combinatorial z
+        1]; % cavity   
+x0_9 = [0.179 -41.754 0.987 0.876 0.392 ... %slic es
+        0.823 0.891 0.891 0.669 0.466 0.676 ... %disp
+        0.161 0.789 0.365 0.452 0.298 0.877 ... %disp cont.
+        0.387 0.112 0.814 0.774 0.373 0.113 ... %disp cont.
+        0.188 0.249 0.717 0.437 0.448 0.450 ... %hbond
+        0.888 0.225 0.522 0.506 0.215 0.646 ... %hbond 
+        4 ... % combinatorial z
+        0.25]; % cavity   
+x0_10 = [0.454 -48.813 -0.541 -0.548 -0.062 ... %slic es
+        0.463 0.787 0.777 0.785 0.807 0.552 ... %disp
+        0.455 0.354 0.365 0.917 0.835 0.281 ... %disp cont.
+        0.756 0.031 0.622 0.484 0.992 0.417 ... %disp cont.
+        0.642 0.355 0.401 0.036 0.666 0.506 ... %hbond
+        0.319 0.539 0.426 0.652 0.314 0.668 ... %hbond 
+        2 ... % combinatorial z
+        1]; % cavity   
+x0_11 = [0.453 -48.813	-0.541 -0.548	-0.062	... %slic es
         1.216	1.138	1.140	1.438	0.842	0.164 ... %disp
         0.000	1.090	0.860	0.641	1.095	0.160 ... %disp cont.
         0.327	0.886	0.442	0.828	1.153	0.358 ... %disp cont.
         0.796	0.210	0.489	0.145	0.121	0.088 ... %hbond
         0.444	0.465	0.109	0.978	2.708	0.088 ... %hbond 
         2 ... % combinatorial z
-        1]; % cavity 		
+        1]; % cavity 			
+
+x0 = x0_1;
+
+opt_file_name = 'OptSlicCdc_1.mat';
 
 % alpha : x(1)                      % O-sp3-H dispersion coeff : x(20)     
 % beta : x(2)                       % P dispersion coeff : x(21)    
@@ -176,7 +259,7 @@ lb = [-2 -200 -100 -20  -0.1 ...
       0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0];
 
 % optimization options
-options = optimoptions('lsqnonlin', 'MaxIter', 20);
+options = optimoptions('lsqnonlin', 'MaxIter', 30);
 options = optimoptions(options,'Display', 'iter');
 
 % objective function (SLIC_es + CDC_np + hb)
@@ -205,7 +288,7 @@ rmse_es = rms(es_mob-es);
 rmse_eshb = rms(es_mob-es-hb);
 
 % save the results
-save('OptSlicCdcWater.mat', 'x', 'training_set', 'mol_list', 'ref', ...
+save(opt_file_name, 'x', 'training_set', 'mol_list', 'ref', ...
      'calc', 'es', 'np', 'hb', 'disp', ...
      'disp_slsl', 'disp_svsl', 'disp_svsv', 'comb', 'cav', ...
      'disp_mob', 'cav_mob', 'np_mob', 'es_mob', 'np_SLIC', ...

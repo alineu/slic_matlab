@@ -1,6 +1,5 @@
-function hbondE = CalcHBondE(solute_hbond_data,solvent_hbond_data,...
-                                    hbond_coeffs,temp)
-
+function hbondE = CalcHBondE(solute_hbond_data, solvent_hbond_data, ...
+                                    hbond_coeffs, temp)
 kB = 0.001987;
 solute_acceptor_grp = solute_hbond_data(1:end-5);
 solvent_acceptor_grp = solvent_hbond_data(1:end-5);

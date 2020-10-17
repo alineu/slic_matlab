@@ -22,7 +22,7 @@ convertKJtoKcal = 1/joulesPerCalorie;
 global UsefulConstants ProblemSet saveMemory writeLogfile logfileName
 saveMemory = 1;
 writeLogfile = 0;
-logfileName = 'run_logfile';
+logfileName = 'run_logfile_1';
 
 % allData includes atom parameters for 495 neutral small molecules that are REQUIRED
 % for parameterization and prediction runs. This includes dispersion-atom-types, 
@@ -106,8 +106,8 @@ es_SLIC= allData.es_SLIC;
 
 % load the optimal parameters from the optimization run (param_solvent)
 chdir(curdir);
-file_name = 'OptSlicCdcWater.mat';
-ParamInfo = load(file_name);
+opt_file_name = 'OptSlicCdc_1.mat';
+ParamInfo = load(opt_file_name);
 training_set = ParamInfo.training_set;
 
 % load the optimal parameters that are obtained from the optimization process
@@ -123,7 +123,9 @@ rmse_es = rms(es_mob-es);
 rmse_eshb = rms(es_mob-es-hb);
 
 % save the results
-save('RunSlicCdcWater.mat', 'mol_list', 'training_set', 'x', ...
+run_file_name = 'RunSlicCdc_1.mat';
+
+save(run_file_name, 'mol_list', 'training_set', 'x', ...
     'err', 'calc', 'ref', 'es', 'np', 'hb', ...
     'disp', 'disp_slsl', 'disp_svsl', 'disp_svsv', 'cav', 'comb', ...
     'rmse', 'rmse_np', 'rmse_disp', 'rmse_cav', 'rmse_es', 'rmse_eshb', ...

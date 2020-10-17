@@ -1,6 +1,6 @@
 function density = density_water(temp)
 
-% returns water density for temperature range 25-125 C
+% Returns water density for temperature range 25-125 C
 % data from Jorgensen 07
 
 temp_list = [273.18	283.18 288.78 294.18 299.88 305.38 310.98 ... 
