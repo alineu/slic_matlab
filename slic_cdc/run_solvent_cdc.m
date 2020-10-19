@@ -8,11 +8,16 @@
 
 clear all
 Home = getenv('HOME');
+% The line below assumes that the repository is located in your HOME
+% directory (/Users/user in MacOS). Otherwise you need to replace Home with
+% 'path/to/parent/fodler'
 repo_path = sprintf('%s/slic_matlab', Home);
 addpath(sprintf('%s/panelbem', repo_path));
 addpath(sprintf('%s/slic_cdc', repo_path));
 addpath(sprintf('%s/slic_sasa', repo_path));
 addpath(sprintf('%s/functions', repo_path));
+% Ask Ali for ref_data
+% https://www.dropbox.com/sh/5okqykiw8dr6gmb/AAAgcYlkuqp0lQIWcuYzGYgZa?dl=0
 addpath(sprintf('%s/ref_data', repo_path));
 
 % loadConstants includes a  bunch of useful variables and constants. also defining 
