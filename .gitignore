@@ -1,3 +1,4 @@
 # gitignore
 slic_cdc/test_run_solvent_cdc.m
 slic_cdc/test_param_solvent_cdc.m
+ref_data/nlbc_test
