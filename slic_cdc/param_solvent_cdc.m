@@ -29,7 +29,7 @@ logfileName = 'param_logfile';
 % allData includes atom parameters for 495 neutral small molecules that are REQUIRED
 % for parameterization and prediction runs. This includes dispersion-atom-types, 
 % Hbond-atom-types, surface-area fractions etc.
-allData = readtable('all_data_2.csv');
+allData = readtable('all_data.csv');
 
 % COSMO-SAC Dispersion atom types
 % all_atom_types = {'br', 'c-sp', 'c-sp2', 'c-sp3', 'cl',...
@@ -129,7 +129,7 @@ for i=1:length(training_set)
   atom_vols{i} = allData{index, 14};
   temp{i} = temperature;
   chdir(curdir);
-  addProblemCosmo_2(training_set{i}, pqrAll{i}, srfFile{i}, chargeDist{i}, ...
+  addProblemCosmo(training_set{i}, pqrAll{i}, srfFile{i}, chargeDist{i}, ...
                     referenceData{i}, soluteAtomAreas{i}, soluteAtomTypes{i}, ...
                     hbondData{i}, solute_VdWV{i}, solute_VdWA{i}, ...
                     solventAtomAreas{i}, solventAtomTypes{i}, ...
@@ -185,15 +185,15 @@ options = optimoptions('lsqnonlin', 'MaxIter', 20);
 options = optimoptions(options,'Display', 'iter');
 
 % objective function (SLIC_es + CDC_np + hb)
-y = @(x)ObjectiveFromBEMCosmo_2(x);
+y = @(x)ObjectiveFromBEMCosmo(x);
 
 [x, resnorm, residual, exitflag, output,] = lsqnonlin(y, x0, lb, ub, ...
     options);
 [err, calc, ref, es, np, hb, disp, disp_slsl, disp_svsl, disp_svsv, cav, ...
-    comb] = ObjectiveFromBEMCosmo_2(x);
+    comb] = ObjectiveFromBEMCosmo(x);
 
 [err0, calc0, ref0, es0, np0, hb0, disp0, disp_slsl0, disp_svsl0, ...
-    disp_svsv0, cav0, comb0] = ObjectiveFromBEMCosmo_2(x0);
+    disp_svsv0, cav0, comb0] = ObjectiveFromBEMCosmo(x0);
 
 [~, id]=ismember(training_set, mol_list);
 disp_mob = allData.disp_mobley(id); 

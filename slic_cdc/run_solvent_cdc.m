@@ -32,7 +32,7 @@ logfileName = 'run_logfile';
 % allData includes atom parameters for 495 neutral small molecules that are REQUIRED
 % for parameterization and prediction runs. This includes dispersion-atom-types, 
 % Hbond-atom-types, surface-area fractions etc.
-allData = readtable('all_data_2.csv');
+allData = readtable('all_data.csv');
 
 % COSMO-SAC Dispersion atom types
 % all_atom_types = {'br', 'c-sp', 'c-sp2', 'c-sp3', 'cl', ...
@@ -93,7 +93,7 @@ for i=1:length(mol_list)
   temp{i} = temperature;
   referenceData{i} = dG_list(i);
   chdir(curdir);
-  addProblemCosmo_2(mol_list{i}, pqrAll{i}, srfFile{i}, chargeDist{i}, referenceData{i}, ...
+  addProblemCosmo(mol_list{i}, pqrAll{i}, srfFile{i}, chargeDist{i}, referenceData{i}, ...
                     soluteAtomAreas{i}, soluteAtomTypes{i}, hbondData{i}, ...
                     solute_VdWV{i}, solute_VdWA{i}, ...
                     solventAtomAreas{i}, solventAtomTypes{i}, ...
@@ -118,7 +118,7 @@ training_set = ParamInfo.training_set;
 x = ParamInfo.x;
 
 % objective function
-[err, calc, ref, es, np, hb, disp, disp_slsl, disp_svsl, disp_svsv, cav, comb] = ObjectiveFromBEMCosmo_2(x);
+[err, calc, ref, es, np, hb, disp, disp_slsl, disp_svsl, disp_svsv, cav, comb] = ObjectiveFromBEMCosmo(x);
 rmse = rms(ref-calc);
 rmse_np = rms(np_mob-np);
 rmse_disp = rms(disp_mob-disp);
