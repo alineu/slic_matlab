@@ -1,4 +1,4 @@
-% Path information 
+q% Path information 
 % Note: the path information is set up assuming that the slic_matlab libraries is 
 %       located at 'HOME' directory. If your library is located elswhere, you need
 %       to change Home variable to point to the parent folder of the library 
