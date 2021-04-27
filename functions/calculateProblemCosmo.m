@@ -17,7 +17,7 @@ calculatedE = zeros(numTestsInProblem, 1);
 for i=1:numTestsInProblem
   [calculatedE(i),electrostatic(i),nonpolar(i),dG_hb(i),dG_disp(i),...
    dG_disp_sl_sl(i),dG_disp_sv_sl(i),dG_disp_sv_sv(i),dG_cav(i),dG_comb(i)] = ...
-   runTestCosmo(params, problem, problem.chargeDistribution(:,i));
+   runTestCosmo_2(params, problem, problem.chargeDistribution(:,i));
 end
 
 % Here's where the information about the reference result (whether

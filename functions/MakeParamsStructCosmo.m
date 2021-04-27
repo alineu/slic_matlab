@@ -2,10 +2,10 @@ function Params = MakeParamsStructCosmo(x)
 Params = struct('alpha', x(1),'beta', x(2),'EfieldOffset', x(3), ...
 		'mu', x(4), 'phiStatic', x(5), ...
         'dispCoeffs', x(6:22),'q_s', x(23), ...
-        'hbondCoeffs', x(24:35), ...
-        'zComb', x(36),'cavity_coeff', x(37));
+        'hbondCoeffs', x(24:33), ...
+        'zComb', x(34),'cavity_coeff', x(35));
         
-fprintf('Params: \n');
+fprintf('Params: \n\n');
 fprintf('alpha = %0.3f \n', x(1));
 fprintf('beta = %0.3f \n', x(2));
 fprintf('gamma = %0.3f \n', x(3));
@@ -28,20 +28,18 @@ fprintf('O-sp3 dispersion coeff = %0.3f \n', x(19));
 fprintf('O-sp3-H dispersion coeff = %0.3f \n', x(20));
 fprintf('P dispersion coeff = %0.3f \n', x(21));
 fprintf('S dispersion coeff = %0.3f \n', x(22));
-fprintf('q_s H-bond coeff = %0.3f \n', x(23));
-fprintf('n_amine H-bond coeff = %0.3f \n', x(24));
-fprintf('n_amide H-bond coeff = %0.3f \n', x(25));
-fprintf('n_nitro H-bond coeff = %0.3f \n', x(26));
-fprintf('n_other H-bond coeff = %0.3f \n', x(27));
-fprintf('o_carbonyl H-bond coeff = %0.3f \n', x(28));
-fprintf('o_ester H-bond coeff = %0.3f \n', x(29));
-fprintf('o_nitro H-bond coeff = %0.3f \n', x(30));
-fprintf('o_hydroxyl H-bond coeff = %0.3f \n', x(31));
-fprintf('fluorine H-bond coeff = %0.3f \n', x(32));
-fprintf('h_oh H-bond coeff = %0.3f \n', x(33));
-fprintf('h_nh H-bond coeff = %0.3f \n', x(34));
-fprintf('h_other H-bond coeff = %0.3f \n', x(35));
-fprintf('z combinatorial coeff = %0.3f \n', x(36));
-fprintf('cavity rescaling coeff = %0.3f \n\n', x(37));
+fprintf('q_s dispersion coeff = %0.3f \n', x(23));
+fprintf('n_amn_hoh hb coeff = %0.3f \n', x(24));
+fprintf('n_amd_hoh hb coeff = %0.3f \n', x(25));
+fprintf('n_no2_hoh hb coeff = %0.3f \n', x(26));
+fprintf('n_other_hoh hb coeff = %0.3f \n', x(27));
+fprintf('o_crbnl_hoh hb coeff = %0.3f \n', x(28));
+fprintf('o_estr_hoh hb coeff = %0.3f \n', x(29));
+fprintf('o_no2_hoh hb coeff = %0.3f \n', x(30));
+fprintf('o_oh_hoh hb coeff = %0.3f \n', x(31));
+fprintf('fl_hoh hb coeff = %0.3f \n', x(32));
+fprintf('o_oh_hnh hb coeff = %0.3f \n', x(33));
+fprintf('z combinatorial coeff = %0.3f \n', x(34));
+fprintf('cavity rescaling coeff = %0.3f \n\n', x(35));
 
 

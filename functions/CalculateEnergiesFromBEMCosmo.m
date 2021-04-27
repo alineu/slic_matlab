@@ -23,7 +23,7 @@ comb = [];
 numProblems = length(ProblemSet);
 
 for i=1:numProblems
-  fprintf('Problem %d added!/n',i)  
+  fprintf('\nAdding Problem %d !\n',i)
   curProblem = ProblemSet(i);
   [newCalculatedE, newReferenceE, newElectrostatic, newNonpolar, ...
    newHb, newDisp, newDisp_sl_sl, newDisp_sv_sl, newDisp_sv_sv, ...
@@ -55,7 +55,7 @@ end
   disp_sv_sv = [disp_sv_sv; newDisp_sv_sv];
   cav = [cav; newCav];
   comb = [comb; newComb];
-  
+  fprintf('Problem %d added!\n',i)
 end
 
 % There's no need for a trailing "end" at the end of a Matlab

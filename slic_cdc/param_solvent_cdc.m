@@ -8,7 +8,7 @@ Home = getenv('HOME');
 % The line below assumes that the repository is located in your HOME
 % directory (/Users/user in MacOS). Otherwise you need to replace Home with
 % 'path/to/parent/fodler' 
-repo_path = sprintf('%s/slic_matlab', Home); 
+repo_path = sprintf('%s/repos/slic_matlab', Home); 
 addpath(sprintf('%s/panelbem', repo_path));
 addpath(sprintf('%s/slic_cdc', repo_path));
 addpath(sprintf('%s/slic_sasa', repo_path));
@@ -29,7 +29,7 @@ logfileName = 'param_logfile';
 % allData includes atom parameters for 495 neutral small molecules that are REQUIRED
 % for parameterization and prediction runs. This includes dispersion-atom-types, 
 % Hbond-atom-types, surface-area fractions etc.
-allData = readtable('all_data.csv');
+allData = readtable('all_data_2.csv');
 
 % COSMO-SAC Dispersion atom types
 % all_atom_types = {'br', 'c-sp', 'c-sp2', 'c-sp3', 'cl',...
@@ -72,14 +72,15 @@ training_set  = ...
      'nonanal', 'benzaldehyde', 'methanol', '3_methyl_1h_indole', ...
      'anthracene', '124_trimethylbenzene', '2_naphthylamine', ...
      '4_formylpyridine', 'cyclohexylamine', 'dimethyl_sulfide', ...
-     'hex_1_ene', 'n_butanethiol', 'naphthalene', ...
-     '33_dimethylbutan_2_one', '333_trimethoxypropionitrile', ...
-     'chloroethane', 'diethyl_sulfide', 'ethene', 'imidazole', ...
-     'methyl_octanoate', 'n_octane', 'n_propylbenzene', 'p_cresol', ...
-     'propanoic_acid', 'tetrahydropyran', 'trichloroethene', ...
-     '2_methoxyaniline', '2_methylhexane', '2_nitropropane', ...
-     '26_dimethylpyridine', 'benzene', 'but_1_ene', 'but_1_yne', ...
-     'm_xylene', 'methane', 'n_pentylamine', 'p_dibromobenzene'};
+     'hex_1_ene', 'n_butanethiol'};
+%  , 'naphthalene', ...
+%      '33_dimethylbutan_2_one', '333_trimethoxypropionitrile', ...
+%      'chloroethane', 'diethyl_sulfide', 'ethene', 'imidazole', ...
+%      'methyl_octanoate', 'n_octane', 'n_propylbenzene', 'p_cresol', ...
+%      'propanoic_acid', 'tetrahydropyran', 'trichloroethene', ...
+%      '2_methoxyaniline', '2_methylhexane', '2_nitropropane', ...
+%      '26_dimethylpyridine', 'benzene', 'but_1_ene', 'but_1_yne', ...
+%      'm_xylene', 'methane', 'n_pentylamine', 'p_dibromobenzene'};
         
 dG_list = allData.dG_expt; 
 dG_disp_mob = allData.disp_mobley; 
@@ -92,12 +93,10 @@ all_solutes = allData.solute;
 mol_list = all_solutes;
 solventAreas = allData{495, 9:79};
 solventATypes = allData{495, 80:144};
-solventHbData = allData{495, 145:end};
 solventVdWA = allData{495, 11};
 solventVdWV = allData{495, 12};
 soluteAreas = allData{:,9:79};
 soluteATypes = allData{:,80:144};
-soluteHbData = allData{:,145:end};
 soluteVdWA = allData{:,11};
 soluteVdWV = allData{:,12};
 temperature = 24.85 + KelvinOffset;
@@ -118,24 +117,24 @@ for i=1:length(training_set)
   end
   soluteAtomAreas{i} = allData{index, 9:79};
   soluteAtomTypes{i} = {allData{index, 80:144}};
-  soluteHbondData{i} = allData{index, 145:end};
+  hbondData{i} = allData{index, 145:154};
   referenceData{i} = dG_list(index);
   solute_VdWA{i} = allData{index, 11};
   solute_VdWV{i} = allData{index, 12};
+  spherocity{i} = allData{index, 155};
   solventAtomAreas{i} = solventAreas;
   solventAtomTypes{i} = {solventATypes};
-  solventHbondData{i} = solventHbData;
   solvent_VdWA{i} = solventVdWA;
   solvent_VdWV{i} = solventVdWV;
   atom_vols{i} = allData{index, 14};
   temp{i} = temperature;
   chdir(curdir);
-  addProblemCosmo(training_set{i}, pqrAll{i}, srfFile{i}, chargeDist{i}, ...
-                  referenceData{i}, soluteAtomAreas{i}, soluteAtomTypes{i}, ...
-                  soluteHbondData{i}, solute_VdWV{i}, solute_VdWA{i}, ...
-                  solventAtomAreas{i}, solventAtomTypes{i}, ...
-                  solventHbondData{i}, solvent_VdWV{i}, solvent_VdWA{i}, ...
-                  atom_vols{i}, temp{i});
+  addProblemCosmo_2(training_set{i}, pqrAll{i}, srfFile{i}, chargeDist{i}, ...
+                    referenceData{i}, soluteAtomAreas{i}, soluteAtomTypes{i}, ...
+                    hbondData{i}, solute_VdWV{i}, solute_VdWA{i}, ...
+                    solventAtomAreas{i}, solventAtomTypes{i}, ...
+                    solvent_VdWV{i}, solvent_VdWA{i}, ...
+                    atom_vols{i}, spherocity{i}, temp{i});
 end
 
 % optimization
@@ -145,55 +144,56 @@ x0  =  [0.453 -48.813	-0.541 -0.548	-0.062	... %slic es
         1.216	1.138	1.140	1.438	0.842	0.164 ... %disp
         0.000	1.090	0.860	0.641	1.095	0.160 ... %disp cont.
         0.327	0.886	0.442	0.828	1.153	0.358 ... %disp cont.
-        0.796	0.210	0.489	0.145	0.121	0.088 ... %hbond
-        0.444	0.465	0.109	0.978	2.708	0.088 ... %hbond 
-        2 ... % combinatorial z
+       -0.796  -0.210  -0.489  -0.145  -0.121   ... %hbond (negative)
+       -0.444  -0.465  -0.109  -0.978  -2.708	... %hbond  (negative)
+        6 ... % combinatorial z
         1]; % cavity 		
 
-% alpha : x(1)                      % O-sp3-H dispersion coeff : x(20)     
-% beta : x(2)                       % P dispersion coeff : x(21)    
-% gamma : x(3)                      % S dispersion coeff : x(22)     
-% mu : x(4)                         % q_s H-bond coeff : x(23)  
-% phi_static : x(5)                 % n_amine H-bond coeff : x(24)          
-% Br dispersion coeff : x(6)        % n_amide H-bond coeff : x(25)
-% C-sp dispersion coeff : x(7)      % n_nitro H-bond coeff : x(26)  
-% C-sp2 dispersion coeff : x(8)     % n_other H-bond coeff : x(27)   
-% C-sp3 dispersion coeff : x(9)     % o_carbonyl H-bond coeff : x(28)   
-% Cl dispersion coeff : x(10)       % o_ester H-bond coeff : x(29) 
-% F dispersion coeff : x(11)        % o_nitro H-bond coeff : x(30)
-% H dispersion coeff : x(12)        % o_hydroxyl H-bond coeff : x(31)
-% I dispersion coeff : x(13)        % fluorine H-bond coeff : x(32)
-% N-sp dispersion coeff : x(14)     % h_oh H-bond coeff : x(33)   
-% N-sp2 dispersion coeff : x(15)    % h_nh H-bond coeff : x(34)    
-% N-sp3 dispersion coeff : x(16)    % h_other H-bond coeff : x(35)    
-% O-sp2 dispersion coeff : x(17)    % z combinatorial coeff : x(36)    
-% O-sp2-N dispersion coeff : x(18)  % cavity rescaling coeff : x(37)      
-% O-sp3 dispersion coeff : x(19)
 
+% alpha : x(1)                      % O-sp3 dispersion coeff : x(19)
+% beta : x(2)                       % O-sp3-H dispersion coeff : x(20)     
+% gamma : x(3)                      % P dispersion coeff : x(21)    
+% mu : x(4)                         % S dispersion coeff : x(22)     
+% phi_static : x(5)                 % q_s H-bond coeff : x(23)  
+% Br dispersion coeff : x(6)        % n_amn_hoh : x(24)          
+% C-sp dispersion coeff : x(7)      % n_amd_hoh : x(25)
+% C-sp2 dispersion coeff : x(8)     % n_no2_hoh : x(26)  
+% C-sp3 dispersion coeff : x(9)     % n_other_hoh : x(27)   
+% Cl dispersion coeff : x(10)       % o_crbnl_hoh : x(28)   
+% F dispersion coeff : x(11)        % o_estr_hoh : x(29) 
+% H dispersion coeff : x(12)        % o_no2_hoh : x(30)
+% I dispersion coeff : x(13)        % o_oh_hoh : x(31)
+% N-sp dispersion coeff : x(14)     % fl_hoh : x(32)
+% N-sp2 dispersion coeff : x(15)    % o_oh_hnh : x(33)   
+% N-sp3 dispersion coeff : x(16)    % z combinatorial coeff : x(34) 
+% O-sp2 dispersion coeff : x(17)    % cavity rescaling coeff : x(35)    
+% O-sp2-N dispersion coeff : x(18)        
+    
+    
 % upper bound
 ub = [+2 +200 +100 +20  +0.1 ...
       20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 ...
-      20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 4];
+      20 20 5 5 5 5 5 5 5 5 5 5 20 4];
 
 % lower bound
 lb = [-2 -200 -100 -20  -0.1 ...
-      0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-      0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0];
+      0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+      0 0 0 -5 -5 -5 -5 -5 -5 -5 -5 -5 -5 0 0];
 
 % optimization options
 options = optimoptions('lsqnonlin', 'MaxIter', 20);
 options = optimoptions(options,'Display', 'iter');
 
 % objective function (SLIC_es + CDC_np + hb)
-y = @(x)ObjectiveFromBEMCosmo(x);
+y = @(x)ObjectiveFromBEMCosmo_2(x);
 
 [x, resnorm, residual, exitflag, output,] = lsqnonlin(y, x0, lb, ub, ...
     options);
 [err, calc, ref, es, np, hb, disp, disp_slsl, disp_svsl, disp_svsv, cav, ...
-    comb] = ObjectiveFromBEMCosmo(x);
+    comb] = ObjectiveFromBEMCosmo_2(x);
 
 [err0, calc0, ref0, es0, np0, hb0, disp0, disp_slsl0, disp_svsl0, ...
-    disp_svsv0, cav0, comb0] = ObjectiveFromBEMCosmo(x0);
+    disp_svsv0, cav0, comb0] = ObjectiveFromBEMCosmo_2(x0);
 
 [~, id]=ismember(training_set, mol_list);
 disp_mob = allData.disp_mobley(id); 

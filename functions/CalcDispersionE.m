@@ -50,8 +50,10 @@ for i=1:length(unique_atom_types_solvent)
         radii_solute = radii_solute_value.Variables;
         radii_ij = (radii_solvent+radii_solute)/2;
         disp_coeff_ij = sqrt(coeff_solute*coeff_solvent);
+        %square_well_exp = -radii_ij^3*(lambda^3-1)*...
+        %                   disp_coeff_ij*(1+disp_coeff_ij*beta/2);
         square_well_exp = -radii_ij^3*(lambda^3-1)*...
-                           disp_coeff_ij*(1+disp_coeff_ij*beta/2);
+                           -disp_coeff_ij*exp(-disp_coeff_ij/(kB*temperature));
         [m, ~] = ismember(solute_types.Variables,{solute_atom_type});
         areas_solute = solute_areas(m);
         m_tau_solute = sum(areas_solute.^q_s);

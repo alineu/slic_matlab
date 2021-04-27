@@ -42,12 +42,12 @@ solute_data = problem.soluteAtomAreas;
 solute_atom_types = problem.soluteAtomTypes;
 solute_vdw_v = problem.solute_VdWV;
 solute_vdw_a = problem.solute_VdWA;
-solute_hbond_data = problem.soluteHbondData;
+hbond_data = problem.hbondData;
 solvent_vdw_v = problem.solvent_VdWV;
 solvent_vdw_a = problem.solvent_VdWA;
 solvent_data = problem.solventAtomAreas;
 solvent_atom_types = problem.solventAtomTypes;
-solvent_hbond_data = problem.solventHbondData;
+spherocity = problem.spherocity;
 temp = problem.temperature;
 disp_coeffs = params.dispCoeffs;
 z_comb = params.zComb;
@@ -60,7 +60,7 @@ vol_solvent = solvent_data(4);
 lambda = 2;
 
 % Cavity
-cav = kB*temp*CalcCavityE(area_solute, vol_solute, atom_vols, cavity_coeff, temp);
+cav = kB*temp*CalcCavityE(area_solute, vol_solute, atom_vols, cavity_coeff, spherocity, temp);
 
 % Dispersion
 disp_sv_sv = (vol_solute/vol_solvent)*...
@@ -76,7 +76,7 @@ disp_sl_sl = (CalcDispersionE(solute_data, solute_atom_types, ...
                                solute_data, solute_atom_types, ...
                                disp_coeffs, q_s, lambda, temp));
                            
-disp = 2*disp_sv_sl - disp_sv_sv + disp_sl_sl;
+disp = -2*disp_sv_sl + disp_sv_sv;
 
 %Combinatorial
 comb = -kB*temp*CalcCombinatorialE(solute_vdw_a, solute_vdw_v, ...
@@ -85,7 +85,7 @@ nonpolar = comb + disp + cav;
 
 %% Hydrogen bonding
 hbond_coeffs = params.hbondCoeffs;
-hb = CalcHBondE(solute_hbond_data, solvent_hbond_data, hbond_coeffs, temp);
+hb = CalcHBondE(hbond_data, hbond_coeffs, temp);
 
 %% Total dG
 E = electrostatic + nonpolar + hb;

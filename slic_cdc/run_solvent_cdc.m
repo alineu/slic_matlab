@@ -32,7 +32,7 @@ logfileName = 'run_logfile';
 % allData includes atom parameters for 495 neutral small molecules that are REQUIRED
 % for parameterization and prediction runs. This includes dispersion-atom-types, 
 % Hbond-atom-types, surface-area fractions etc.
-allData = readtable('all_data.csv');
+allData = readtable('all_data_2.csv');
 
 % COSMO-SAC Dispersion atom types
 % all_atom_types = {'br', 'c-sp', 'c-sp2', 'c-sp3', 'cl', ...
@@ -68,7 +68,6 @@ mol_list = allData.solute;
 dG_list = allData.dG_expt;
 solventAreas = allData{495, 9:79};
 solventATypes = allData{495, 80:144};
-solventHbData = allData{495, 145:end};
 solventVdWA = allData{495, 11};
 solventVdWV = allData{495, 12};
 temperature = 24.85 + KelvinOffset;
@@ -82,24 +81,24 @@ for i=1:length(mol_list)
   chargeDist{i} = pqrData.q;
   soluteAtomAreas{i} = allData{i, 9:79};
   soluteAtomTypes{i} = {allData{i, 80:144}};
-  soluteHbondData{i} = allData{i, 145:end};
+  hbondData{i} = allData{i, 145:154};
   solute_VdWA{i} = allData{i, 11};
   solute_VdWV{i} = allData{i, 12};
   solventAtomAreas{i} = solventAreas;
   solventAtomTypes{i} = {solventATypes};
-  solventHbondData{i} = solventHbData;
   solvent_VdWA{i} = solventVdWA;
   solvent_VdWV{i} = solventVdWV;
+  spherocity{i} = allData{i, 155};
   atom_vols{i} = allData{i, 14};
   temp{i} = temperature;
   referenceData{i} = dG_list(i);
   chdir(curdir);
-  addProblemCosmo(mol_list{i}, pqrAll{i}, srfFile{i}, chargeDist{i}, referenceData{i}, ...
-                  soluteAtomAreas{i}, soluteAtomTypes{i}, soluteHbondData{i}, ...
-                  solute_VdWV{i}, solute_VdWA{i}, ...
-                  solventAtomAreas{i}, solventAtomTypes{i}, solventHbondData{i}, ...
-                  solvent_VdWV{i}, solvent_VdWA{i}, ...
-                  atom_vols{i}, temp{i});
+  addProblemCosmo_2(mol_list{i}, pqrAll{i}, srfFile{i}, chargeDist{i}, referenceData{i}, ...
+                    soluteAtomAreas{i}, soluteAtomTypes{i}, hbondData{i}, ...
+                    solute_VdWV{i}, solute_VdWA{i}, ...
+                    solventAtomAreas{i}, solventAtomTypes{i}, ...
+                    solvent_VdWV{i}, solvent_VdWA{i}, ...
+                    atom_vols{i}, temp{i});
 end
 
 disp_mob = allData.disp_mobley; 
@@ -119,7 +118,7 @@ training_set = ParamInfo.training_set;
 x = ParamInfo.x;
 
 % objective function
-[err, calc, ref, es, np, hb, disp, disp_slsl, disp_svsl, disp_svsv, cav, comb] = ObjectiveFromBEMCosmo(x);
+[err, calc, ref, es, np, hb, disp, disp_slsl, disp_svsl, disp_svsv, cav, comb] = ObjectiveFromBEMCosmo_2(x);
 rmse = rms(ref-calc);
 rmse_np = rms(np_mob-np);
 rmse_disp = rms(disp_mob-disp);
