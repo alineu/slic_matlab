@@ -2,8 +2,8 @@ function cavE = CalcCavityE(solute_vdw_a, solute_vdw_v, total_atom_vol, ...
                             cav_coeff, spherocity, temperature)
 
 density_ratio = density_water(temperature)/density_water(298);
-%sphericity = pi^(1/3)*((6*solute_vdw_v)^(2/3))/solute_vdw_a;
-sphericity = spherocity;
+sphericity = pi^(1/3)*((6*solute_vdw_v)^(2/3))/solute_vdw_a;
+%sphericity = spherocity;
 shape_factor = (1/sphericity)^cav_coeff;
 packing_ratio = ((total_atom_vol-solute_vdw_v)/total_atom_vol);
 cavE = ((2*shape_factor-1)*packing_ratio*(4-3*packing_ratio)/((1-packing_ratio)^2)-...

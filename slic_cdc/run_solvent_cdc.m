@@ -11,7 +11,7 @@ Home = getenv('HOME');
 % The line below assumes that the repository is located in your HOME
 % directory (/Users/user in MacOS). Otherwise you need to replace Home with
 % 'path/to/parent/fodler'
-repo_path = sprintf('%s/slic_matlab', Home);
+repo_path = sprintf('%s/repos/slic_matlab', Home);
 addpath(sprintf('%s/panelbem', repo_path));
 addpath(sprintf('%s/slic_cdc', repo_path));
 addpath(sprintf('%s/slic_sasa', repo_path));
@@ -19,6 +19,7 @@ addpath(sprintf('%s/functions', repo_path));
 % Ask Ali for ref_data
 % https://www.dropbox.com/sh/5okqykiw8dr6gmb/AAAgcYlkuqp0lQIWcuYzGYgZa?dl=0
 addpath(sprintf('%s/ref_data', repo_path));
+path_to_ref_data = sprintf('%s/Dropbox/lab/projects/slic-jctc-mnsol/nlbc-mobley/nlbc_test', Home);
 
 % loadConstants includes a  bunch of useful variables and constants. also defining 
 % the global variable "ProblemSet" which we'll use to hold the BEM systems.
@@ -73,7 +74,7 @@ solventVdWV = allData{495, 12};
 temperature = 24.85 + KelvinOffset;
 curdir = pwd;
 for i=1:length(mol_list)
-  dir=sprintf('%s/ref_data/nlbc_test/%s', repo_path, mol_list{i});
+  dir=sprintf('%s/%s', path_to_ref_data, mol_list{i});
   chdir(dir);
   pqrData = loadPqr('test.pqr');
   pqrAll{i} = pqrData;
@@ -98,7 +99,7 @@ for i=1:length(mol_list)
                     solute_VdWV{i}, solute_VdWA{i}, ...
                     solventAtomAreas{i}, solventAtomTypes{i}, ...
                     solvent_VdWV{i}, solvent_VdWA{i}, ...
-                    atom_vols{i}, temp{i});
+                    atom_vols{i}, spherocity{i}, temp{i});
 end
 
 disp_mob = allData.disp_mobley; 
@@ -110,7 +111,7 @@ es_SLIC= allData.es_SLIC;
 
 % load the optimal parameters from the optimization run (param_solvent)
 chdir(curdir);
-file_name = 'OptSlicCdcWater.mat';
+file_name = 'OptSlicCdc_newhb.mat';
 ParamInfo = load(file_name);
 training_set = ParamInfo.training_set;
 
@@ -127,7 +128,7 @@ rmse_es = rms(es_mob-es);
 rmse_eshb = rms(es_mob-es-hb);
 
 % save the results
-save('RunSlicCdcWater.mat', 'mol_list', 'training_set', 'x', ...
+save('RunSlicCdc_newhb.mat', 'mol_list', 'training_set', 'x', ...
     'err', 'calc', 'ref', 'es', 'np', 'hb', ...
     'disp', 'disp_slsl', 'disp_svsl', 'disp_svsv', 'cav', 'comb', ...
     'rmse', 'rmse_np', 'rmse_disp', 'rmse_cav', 'rmse_es', 'rmse_eshb', ...

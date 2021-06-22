@@ -15,7 +15,7 @@ addpath(sprintf('%s/slic_sasa', repo_path));
 addpath(sprintf('%s/functions', repo_path));
 % Ask Ali for ref_data
 % https://www.dropbox.com/sh/5okqykiw8dr6gmb/AAAgcYlkuqp0lQIWcuYzGYgZa?dl=0
-addpath(sprintf('%s/ref_data', repo_path));
+path_to_ref_data = sprintf('%s/Dropbox/lab/projects/slic-jctc-mnsol/nlbc-mobley/nlbc_test', Home);
 
 % loadConstants includes a bunch of useful variables and constants. also defining 
 % the global variable "ProblemSet" which we'll use to hold the BEM systems.
@@ -72,16 +72,21 @@ training_set  = ...
      'nonanal', 'benzaldehyde', 'methanol', '3_methyl_1h_indole', ...
      'anthracene', '124_trimethylbenzene', '2_naphthylamine', ...
      '4_formylpyridine', 'cyclohexylamine', 'dimethyl_sulfide', ...
-     'hex_1_ene', 'n_butanethiol'};
-%  , 'naphthalene', ...
-%      '33_dimethylbutan_2_one', '333_trimethoxypropionitrile', ...
-%      'chloroethane', 'diethyl_sulfide', 'ethene', 'imidazole', ...
-%      'methyl_octanoate', 'n_octane', 'n_propylbenzene', 'p_cresol', ...
-%      'propanoic_acid', 'tetrahydropyran', 'trichloroethene', ...
-%      '2_methoxyaniline', '2_methylhexane', '2_nitropropane', ...
-%      '26_dimethylpyridine', 'benzene', 'but_1_ene', 'but_1_yne', ...
-%      'm_xylene', 'methane', 'n_pentylamine', 'p_dibromobenzene'};
-        
+     'hex_1_ene', 'n_butanethiol', 'naphthalene', ...
+     '33_dimethylbutan_2_one', '333_trimethoxypropionitrile', ...
+     'chloroethane', 'diethyl_sulfide', 'ethene', 'imidazole', ...
+     'methyl_octanoate', 'n_octane', 'n_propylbenzene', 'p_cresol', ...
+     'propanoic_acid', 'tetrahydropyran', 'trichloroethene', ...
+     '2_methoxyaniline', '2_methylhexane', '2_nitropropane', ...
+     '26_dimethylpyridine', 'benzene', 'but_1_ene', 'but_1_yne', ...
+     'm_xylene', 'methane', 'n_pentylamine', 'p_dibromobenzene', ...
+     '12_diacetoxyethane', '3_chloroprop_1_ene', '3_hydroxybenzaldehyde',...
+     '2_propoxyethanol', 'diethyl_ether', 'penta_14_diene', 'benzyl_chloride', ...
+     '2_ethylpyridine', 'isobutylbenzene'};
+
+ 
+ 
+ 
 dG_list = allData.dG_expt; 
 dG_disp_mob = allData.disp_mobley; 
 dG_cav_mob = allData.cav_mobley; 
@@ -103,7 +108,7 @@ temperature = 24.85 + KelvinOffset;
 curdir=pwd;
 
 for i=1:length(training_set)
-  dir=sprintf('%s/ref_data/nlbc_test/%s', repo_path, training_set{i});
+  dir=sprintf('%s/%s', path_to_ref_data, training_set{i});
   chdir(dir);
   pqrData = loadPqr('test.pqr');
   pqrAll{i} = pqrData;
@@ -140,14 +145,14 @@ end
 % optimization
 
 % initial guesses
-x0  =  [0.453 -48.813	-0.541 -0.548	-0.062	... %slic es
-        1.216	1.138	1.140	1.438	0.842	0.164 ... %disp
-        0.000	1.090	0.860	0.641	1.095	0.160 ... %disp cont.
-        0.327	0.886	0.442	0.828	1.153	0.358 ... %disp cont.
-       -0.796  -0.210  -0.489  -0.145  -0.121   ... %hbond (negative)
-       -0.444  -0.465  -0.109  -0.978  -2.708	... %hbond  (negative)
-        6 ... % combinatorial z
-        1]; % cavity 		
+x0  =  [rand   -60	    rand     rand	rand	... %slic es
+        2.300   1.000	2.200	2.800	1.300	0.800 ... %disp
+        1e-5	2.800	1.000	2.000	3.195	0.800 ... %disp cont.
+        1.200	2.000	0.25	3.000	3.000	1 ... %disp cont.
+       -rand   -rand   -rand   -rand   -rand    ... %hbond (negative)
+       -rand   -rand   -rand  -rand  -rand 	... %hbond  (negative)
+        20*rand ... % combinatorial z
+        rand]; % cavity 
 
 
 % alpha : x(1)                      % O-sp3 dispersion coeff : x(19)
@@ -178,7 +183,7 @@ ub = [+2 +200 +100 +20  +0.1 ...
 % lower bound
 lb = [-2 -200 -100 -20  -0.1 ...
       0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-      0 0 0 -5 -5 -5 -5 -5 -5 -5 -5 -5 -5 0 0];
+      0 0 0 0 0 0 0 0 0 0 0 0 0 0 0];
 
 % optimization options
 options = optimoptions('lsqnonlin', 'MaxIter', 20);
@@ -205,12 +210,12 @@ es_SLIC= allData.es_SLIC(id);
 rmse = rms(calc-ref);
 rmse_np = rms(np_mob-np);
 rmse_disp = rms(disp_mob-disp);
-rmse_cav = rms(cav_mob-cav);
+rmse_cav = rms(cav_mob-cav-comb);
 rmse_es = rms(es_mob-es);
 rmse_eshb = rms(es_mob-es-hb);
 
 % save the results
-save('OptSlicCdcWater.mat', 'x', 'training_set', 'mol_list', 'ref', ...
+save('OptSlicCdc_newhb.mat', 'x', 'training_set', 'mol_list', 'ref', ...
      'calc', 'es', 'np', 'hb', 'disp', ...
      'disp_slsl', 'disp_svsl', 'disp_svsv', 'comb', 'cav', ...
      'disp_mob', 'cav_mob', 'np_mob', 'es_mob', 'np_SLIC', ...
