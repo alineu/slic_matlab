@@ -1,4 +1,4 @@
-q% Path information 
+% Path information 
 % Note: the path information is set up assuming that the slic_matlab libraries is 
 %       located at 'HOME' directory. If your library is located elswhere, you need
 %       to change Home variable to point to the parent folder of the library 
@@ -86,5 +86,6 @@ y = @(x)ObjectiveFromBEMSA(x);
 [err,calc,ref,es,np]=ObjectiveFromBEMSA(x);
 [err0,calc0,ref0,es0,np0]=ObjectiveFromBEMSA(x0);
 rmse = rms(calc-ref);
+OptFileName = 'paramSolvent.mat';
 save(OptFileName,'x','rmse','ref','calc','es','np','x0','calc0','es0','np0','epsOut');
 

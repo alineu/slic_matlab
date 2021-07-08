@@ -49,7 +49,7 @@ surfArea_list = Data.SASA;
 
 curdir=pwd;
 for i=1:length(training_set)
-  dir=sprintf('%s/ref_data/nlbc_test/%s',repo_path,training_set{i});
+  dir=sprintf('%s/ref_data/slic_tr/%s',repo_path,training_set{i});
   chdir(dir);
   pqrData = loadPqr('test.pqr');
   pqrAll{i} = pqrData;

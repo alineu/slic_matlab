@@ -5,3 +5,4 @@ ref_data/nlbc_test
 scripts/.ipynb_checkpoints
 **/__pycache__/**
 *.xlsx
+!ref_data/dielectric_constant.xlsx
